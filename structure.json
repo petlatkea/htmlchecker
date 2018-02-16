@@ -29,29 +29,97 @@
                     "class": "sectionwrapper",
                     "children": [
                         {
-
+                            "tag": "div",
+                            "class": "column"
+                        },
+                        {
+                            "tag": "div",
+                            "class": "column"
                         }
                     ]
-                },
+                }
             ]
         },
 
+        {
+            "tag": "section",
+            "id": "eksempler",
+            "children": [
+                {
+                    "tag": "h2"
+                },
+                {
+                    "tag": "div",
+                    "class": "sectionwrapper",
+                    "children": [
+                        {
+                            "tag": "div",
+                            "class": "column",
+                            "children": [
+                                {
+                                    "tag": "div",
+                                    "class": "column_content",
+                                    "children": [
+                                        {
+                                            "tag": "div",
+                                            "class": "top"
+                                      },
+                                        {
+                                            "tag": "div",
+                                            "class": "bottom"
+                                      }
+                                  ]
+                              }
+                          ]
 
+                        },
 
-            nav
-        section#splash
-        section#om
-            h2
-            .sectionwrapper
-                .column
-                .column
-        section#eksempler
-            h2
-            .sectionwrapper
-                .column
-                    .column_content
-                        .top
-                        .bottom
+                        {
+                            "tag": "div",
+                            "class": "column",
+                            "children": [
+                                {
+                                    "tag": "div",
+                                    "class": "column_content",
+                                    "children": [
+                                        {
+                                            "tag": "div",
+                                            "class": "top"
+                                      },
+                                        {
+                                            "tag": "div",
+                                            "class": "bottom"
+                                      }
+                                  ]
+                              }
+                          ]
 
-    }
+                        },
+
+                        {
+                            "tag": "div",
+                            "class": "column",
+                            "children": [
+                                {
+                                    "tag": "div",
+                                    "class": "column_content",
+                                    "children": [
+                                        {
+                                            "tag": "div",
+                                            "class": "top"
+                                      },
+                                        {
+                                            "tag": "div",
+                                            "class": "bottom"
+                                      }
+                                  ]
+                              }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+
 }
