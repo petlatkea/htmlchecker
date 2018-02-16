@@ -8,14 +8,26 @@ function documentLoaded() {
     $.getJSON("structure.json", structureLoaded);
 }
 
+/* Naming:
+    - structure: a tree of objects describing the correct structure
+    - desc: a descriptor node in the structure tree
+
+    - html: a parsed html DOM node tree
+    - node: a node in the html tree
+    - curNode: the current node while traversing the HTML tree
+*/
+
 let structure = "";
+
+let html = null;
+let curNode = null;
+
 
 function structureLoaded( data ) {
     structure = data.structure;
-    console.log(structure);
 
     // Add parent-elements
-    addParentTo(structure,null);
+    structure.forEach( desc => addParentTo(desc,null) );
 
     // TODO: Display required structure as li's...
     //       - make it possible to display checkmarks vs errors ...
@@ -23,102 +35,69 @@ function structureLoaded( data ) {
     $("#submit").on("click", parseHTML);
 }
 
-function addParentTo(description, parent) {
-    description.parent = parent;
+function addParentTo(descriptor, parent) {
+    descriptor.parent = parent;
 
-    if( description.children != undefined ) {
-        description.children.forEach( elm => addParentTo(elm,description));
+    if( descriptor.children != undefined ) {
+        descriptor.children.forEach( child => addParentTo(child,descriptor) );
     }
 }
 
-let structurePos = 0;
-let structureElm = ""
-
-let html = "";
 
 function parseHTML() {
     console.log("Parse away!");
     let str = $("#htmltext").val();
     html = $.parseHTML( str );
 
-    // Check outer structure
-
-    /*
-        header
-            nav
-        section#splash
-        section#om
-            h2
-            .sectionwrapper
-                .column
-                .column
-        section#eksempler
-            h2
-            .sectionwrapper
-                .column
-                    .column_content
-                        .top
-                        .bottom
-    */
-
-    // For each correct element - go into it, and check further
-
-    structureElm = structure[0];
-
-    // Find first match in html
-    let match = -1;
-    for( let i=0; i < html.length; i++) {
-        if( html[i].nodeName.toLowerCase() == structureElm.tag.toLowerCase() ) {
-            console.log("MATCH!");
-            // ready to check
-            match = i;
-            break;
-        }
-    }
-
-    if( match != -1 ) {
-
-        checkStructureFrom( match );
-    }
-    else {
-        console.log("No match found for start!");
-    }
- /*
-    html.forEach( (el,idx) => {
-
-        // Go through all elements, until we hit a match for the first in the structure.
-        if( el.nodeName.toLowerCase() == structureElm.tag.toLowerCase() ) {
-            console.log("MATCH!");
-            // ready to check
-            checkStructureFrom( idx );
-        }
-
-
-//        console.log("Element: ", el.nodeName);
-    });
-    */
+    // Start checking structure
+    checkStructure();
 }
 
-function checkStructureFrom( index ) {
+function checkStructure() {
+    // reset cur
+    curNode = html[0];
 
-    console.log("indx", index);
-    let el = html[index];
+    // check entire structure - one child at a time, deep-left
+    structure.forEach( desc => checkSubStructure(desc) );
 
-    // check if el compares to structureElm
-    if( compareTag(el, structureElm) ) {
-        console.log("Match @" + index);
-        markAsCorrect(structureElm);
+    console.log("DONE CHECKING!")
+}
+
+/* checks part of the tree, with the given desc as root.
+   matches the current part of the HTML, expecting curNodes' parent as root.
+   curNode is modified - can be expected to be a sibling of curNode. */
+function checkSubStructure( rootDesc ) {
+
+    let match = false;
+    // compare rootDesc and curNode - nextSibling curNode until a match is found
+    while( !match && curNode != null ) {
+        // TODO: Test if last node is checked!
+        if( compareTag( rootDesc, curNode) ) {
+            console.log("Match between %o and %o", rootDesc, curNode );
+            match = true;
+        } else {
+            curNode = curNode.nextElementSibling;
+        }
+    }
+
+    if( !match ) {
+        console.log("Never found match for %o", rootDesc);
+        // TODO: MarkAsIncorrect
+
     } else {
-        markAsIncorrect(structureElm);
-    }
+        // TODO: Mark as correct
+        // Correct!
+        // if rootDesc has children, check those
+        if( rootDesc.children != undefined ) {
+            let lastNode = curNode;
+            curNode = curNode.firstElementChild;
+            rootDesc.children.forEach( desc => checkSubStructure(desc) );
+            curNode = lastNode;
+        }
 
-    // Find next element
-    if( structureElm.children != undefined ) {
-        structureElm
+        // finally, move curNode to the nextSibling
+        curNode = curNode.nextElementSibling;
     }
-
-    console.log("El", el.nodeName);
-    console.log("st", structureElm);
 }
 
 function markAsIncorrect(description) {
@@ -129,21 +108,19 @@ function markAsCorrect(description) {
     // TODO: Mark tag as correct in output
 }
 
-function compareTag(node, description) {
+function compareTag(desc, node) {
     let compares = false;
 
     // compare tagname
-    if( node.nodeName.toLowerCase() == description.tag.toLowerCase() ) {
+    if( node.nodeName.toLowerCase() == desc.tag.toLowerCase() ) {
         compares = true;
 
         // for now, everything is okay - but test id and tag
-        if( description.hasOwnProperty("id") &&
-            !node.classList.contains(description.id) ) {
+        if( desc.hasOwnProperty("id") && node.id != desc.id ) {
             compares = false;
         }
 
-        if( description.hasOwnProperty("class") &&
-            !node.classList.contains(description.class)) {
+        if( desc.hasOwnProperty("class") && !node.classList.contains(desc.class) ) {
             compares = false;
         }
     }
