@@ -1,0 +1,57 @@
+{
+    "htmlstructureversion": 1,
+    "name": "stilartside-komplet",
+    "structure": [
+
+        {
+            "tag": "header",
+            "children": [
+                {
+                    "tag": "nav"
+                }
+            ]
+        },
+
+        {
+            "tag": "section",
+            "id": "splash"
+        },
+
+        {
+            "tag": "section",
+            "id": "om",
+            "children": [
+                {
+                    "tag": "h2"
+                },
+                {
+                    "tag": "div",
+                    "class": "sectionwrapper",
+                    "children": [
+                        {
+
+                        }
+                    ]
+                },
+            ]
+        },
+
+
+
+            nav
+        section#splash
+        section#om
+            h2
+            .sectionwrapper
+                .column
+                .column
+        section#eksempler
+            h2
+            .sectionwrapper
+                .column
+                    .column_content
+                        .top
+                        .bottom
+
+    }
+}
