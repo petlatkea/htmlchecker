@@ -3,14 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>HTML checker</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
     <script src="jquery-3.3.1.min.js"></script>
 </head>
+
 <body>
-   <h1>Paste din HTML ind i tekstfeltet:</h1>
-   <textarea id="htmltext" cols="70" rows="30">
+    <h1>Paste HTML ind i tekstfeltet:</h1>
+
+    <div class="wrapper">
+        <div class="column">
+            <textarea id="htmltext" cols="70" rows="30">
 
    </textarea><br>
-   <button id="submit">Tjek min struktur</button>
+            <button id="submit">Tjek struktur</button>
+        </div>
+        <div class="column">
+            <h2>Struktur</h2>
+            <div id="structuredisplay">
+                <ul>
+                    <li>Test</li>
+                    <li>test2</li>
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+
+
 
     <script src="htmlchecker.js"></script>
 </body>

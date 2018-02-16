@@ -1,0 +1,40 @@
+body {
+
+}
+
+h2 {
+    margin: 0;
+}
+
+.wrapper {
+    display: flex;
+}
+
+.column+.column {
+    margin-left: 1em;
+}
+
+#structuredisplay .match {
+    color: green;
+    font-weight: bold;
+}
+
+#structuredisplay .match::after {
+    content: "✔️";
+}
+
+#structuredisplay .no-match {
+    color: red;
+    text-decoration: line-through;
+}
+
+#structuredisplay li.no-match {
+    text-decoration: none;
+    background-color: antiquewhite;
+}
+
+#structuredisplay span.no-match::after {
+    content: "❌";
+    text-decoration: none;
+
+}

@@ -29,6 +29,8 @@ function structureLoaded( data ) {
     // Add parent-elements
     structure.forEach( desc => addParentTo(desc,null) );
 
+    displayStructure();
+
     // TODO: Display required structure as li's...
     //       - make it possible to display checkmarks vs errors ...
 
@@ -43,6 +45,55 @@ function addParentTo(descriptor, parent) {
     }
 }
 
+function displayStructure() {
+    // clear existing structure
+    document.querySelector("#structuredisplay").innerHTML = "";
+
+    let ul = document.createElement("ul");
+
+    structure.forEach( desc => ul.appendChild(createDescriptorDisplay(desc)) );
+
+    document.querySelector("#structuredisplay").appendChild(ul);
+}
+
+function createDescriptorDisplay(descriptor) {
+    // create li for this descriptor
+    let li = document.createElement("li");
+
+    let span = document.createElement("span");
+    span.classList.add("descriptor");
+
+    // build name
+    let name = "";
+    if( descriptor.tag != "div" ) {
+        name += descriptor.tag;
+    }
+    if( descriptor.hasOwnProperty("id") ) {
+        name += "#" + descriptor.id;
+    }
+    // TODO: Check if .class is a problematic name!
+    if( descriptor.hasOwnProperty("class")) {
+        name += "." + descriptor.class;
+    }
+
+    span.appendChild( document.createTextNode(name) );
+    li.appendChild(span);
+
+    // if descriptor element has children, create a sublist for them
+    if( descriptor.children != null ) {
+        let ul = document.createElement("ul");
+
+        descriptor.children.forEach( child => ul.appendChild(createDescriptorDisplay(child)) );
+
+        li.appendChild(ul);
+    }
+
+    // add the span-element to the descriptor (that is the one that should be styled - li will always be parent)
+    descriptor.domElement = span;
+
+    return li;
+}
+
 
 function parseHTML() {
     console.log("Parse away!");
@@ -54,6 +105,14 @@ function parseHTML() {
 }
 
 function checkStructure() {
+    // reset display
+    document.querySelectorAll("#structuredisplay .descriptor").forEach( span => {
+        span.classList.remove("match");
+        span.classList.remove("no-match");
+        span.parentElement.classList.remove("no-match")
+    });
+
+
     // reset cur
     curNode = html[0];
 
@@ -81,11 +140,14 @@ function checkSubStructure( rootDesc ) {
     }
 
     if( !match ) {
+        // FIX: If HTML is missing required element - but has the next one, we will never know
         console.log("Never found match for %o", rootDesc);
-        // TODO: MarkAsIncorrect
+        // Mark as incorrect
+        markAsIncorrect(rootDesc);
 
     } else {
-        // TODO: Mark as correct
+        //  Mark as correct
+        markAsCorrect(rootDesc);
         // Correct!
         // if rootDesc has children, check those
         if( rootDesc.children != undefined ) {
@@ -100,12 +162,13 @@ function checkSubStructure( rootDesc ) {
     }
 }
 
-function markAsIncorrect(description) {
-
+function markAsIncorrect(desc) {
+    desc.domElement.classList.add("no-match");
+    desc.domElement.parentElement.classList.add("no-match");
 }
 
-function markAsCorrect(description) {
-    // TODO: Mark tag as correct in output
+function markAsCorrect(desc) {
+    desc.domElement.classList.add("match");
 }
 
 function compareTag(desc, node) {
