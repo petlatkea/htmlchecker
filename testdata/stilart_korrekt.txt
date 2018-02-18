@@ -139,7 +139,7 @@
             </div>
         </div>
     </section>
-    <section id="farver" class="color6">
+    <section id="komposition_farver" class="color6">
         <h2>Komposition / farver</h2>
         <div class="sectionwrapper">
             <div class="column_wide">

@@ -22,7 +22,9 @@
             "id": "om",
             "children": [
                 {
-                    "tag": "h2"
+                    "tag": "h2",
+                    "alternative": "h1"
+
                 },
                 {
                     "tag": "div",
@@ -46,7 +48,8 @@
             "id": "eksempler",
             "children": [
                 {
-                    "tag": "h2"
+                    "tag": "h2",
+                    "alternative": "h1"
                 },
                 {
                     "tag": "div",
@@ -119,6 +122,138 @@
                     ]
                 }
             ]
+        },
+
+        {
+            "tag": "section",
+            "id": "typografi",
+            "children": [
+                {
+                    "tag": "h2",
+                    "alternative": "h1"
+                },
+                {
+                    "tag": "div",
+                    "class": "sectionwrapper",
+                    "children": [
+                        {
+                            "tag": "div",
+                            "class": "column_wide",
+                            "children": [
+                                {
+                                    "tag": "div",
+                                    "class": "top",
+                                    "children": [
+                                        {
+                                            "tag": "div",
+                                            "class": "txt"
+                                        },
+                                        {
+                                            "tag": "div",
+                                            "class": "image"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "tag": "div",
+                                    "class": "bottom",
+                                    "children": [
+                                        {
+                                            "tag": "div",
+                                            "class": "txt"
+                                        },
+                                        {
+                                            "tag": "div",
+                                            "class": "image"
+                                        }
+                                    ]
+                                }
+
+                            ]
+                        },
+                        {
+                            "tag": "div",
+                            "class": "column_narrow"
+                        }
+                    ]
+                }
+            ]
+        },
+
+         {
+            "tag": "section",
+            "id": "komposition_farver",
+            "children": [
+                {
+                    "tag": "h2",
+                    "alternative": "h1"
+                },
+                {
+                    "tag": "div",
+                    "class": "sectionwrapper",
+                    "children": [
+                        {
+                            "tag": "div",
+                            "class": "column_wide",
+                            "children": [
+                                {
+                                    "tag": "div",
+                                    "class": "column_content"
+                                }
+                            ]
+                        },
+                        {
+                            "tag": "div",
+                            "class": "column_narrow"
+                        }
+                    ]
+                }
+            ]
+        },
+
+         {
+            "tag": "section",
+            "id": "links",
+            "children": [
+                {
+                    "tag": "h2",
+                    "alternative": "h1"
+                },
+                {
+                    "tag": "div",
+                    "class": "sectionwrapper",
+                    "children": [
+                        {
+                            "tag": "div",
+                            "class": "content"
+                        }
+                    ]
+                }
+            ]
+        },
+
+         {
+            "tag": "section",
+            "id": "ekstra",
+            "children": [
+                {
+                    "tag": "h2",
+                    "alternative": "h1"
+                },
+                {
+                    "tag": "div",
+                    "class": "sectionwrapper",
+                    "children": [
+                        {
+                            "tag": "div",
+                            "class": "content"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "tag": "footer"
         }
     ]
 
