@@ -27,7 +27,14 @@ function structureLoaded( data ) {
     structure = data.structure;
 
     // Add parent-elements
-    structure.forEach( desc => addParentTo(desc,null) );
+    let prev = null;
+    structure.forEach( desc => {
+      addParentTo(desc,null);
+        if( prev != null ) {
+                prev.nextSibling = desc;
+            }
+            prev = desc;
+    }  );
 
     displayStructure();
 
@@ -41,7 +48,14 @@ function addParentTo(descriptor, parent) {
     descriptor.parent = parent;
 
     if( descriptor.children != undefined ) {
-        descriptor.children.forEach( child => addParentTo(child,descriptor) );
+        let prevSibling = null;
+        descriptor.children.forEach( child => {
+            addParentTo(child,descriptor);
+            if( prevSibling != null ) {
+                prevSibling.nextSibling = child;
+            }
+            prevSibling = child;
+        } );
     }
 }
 
@@ -68,6 +82,10 @@ function createDescriptorDisplay(descriptor) {
     if( descriptor.tag != "div" ) {
         name += descriptor.tag;
     }
+    if( descriptor.alternative != undefined ) {
+        name += "("+descriptor.alternative+")";
+    }
+
     if( descriptor.hasOwnProperty("id") ) {
         name += "#" + descriptor.id;
     }
@@ -104,6 +122,8 @@ function parseHTML() {
     checkStructure();
 }
 
+let firstmatchfound = false;
+
 function checkStructure() {
     // reset display
     document.querySelectorAll("#structuredisplay .descriptor").forEach( span => {
@@ -115,6 +135,9 @@ function checkStructure() {
 
     // reset cur
     curNode = html[0];
+
+    // reset firstmatch
+    firstmatchfound = false;
 
     // check entire structure - one child at a time, deep-left
     structure.forEach( desc => checkSubStructure(desc) );
@@ -128,14 +151,42 @@ function checkStructure() {
 function checkSubStructure( rootDesc ) {
 
     let match = false;
+    let extraInserted = false;
+    let missingElement = false;
+
     // compare rootDesc and curNode - nextSibling curNode until a match is found
     while( !match && curNode != null ) {
         // TODO: Test if last node is checked!
         if( compareTag( rootDesc, curNode) ) {
             console.log("Match between %o and %o", rootDesc, curNode );
+            firstmatchfound = true;
             match = true;
         } else {
-            curNode = curNode.nextElementSibling;
+            // if first match has been found - check if required element is missing!
+            if( firstmatchfound ) {
+                console.log("something wrong after first!");
+                // ekstra element inserted ...
+                if( curNode.nextElementSibling != null && compareTag( rootDesc, curNode.nextElementSibling ) ) {
+                    console.log("Extra element inserted between required");
+                    extraInserted = true;
+                }
+                else
+                    // an element might be missing - check if this one matches the next descriptor
+                    if( rootDesc.nextSibling != null && compareTag( rootDesc.nextSibling, curNode )) {
+                        missingElement = true;
+                        console.log("Required element missing: ", rootDesc);
+                        break;
+                    }
+                 else {
+                     // TODO: Figure out what this is! . might be multiple extranous elements ...
+                    console.log("Something else...");
+                    curNode = curNode.nextElementSibling;
+                }
+            }
+
+            if( !firstmatchfound || extraInserted ) {
+                curNode = curNode.nextElementSibling;
+            }
         }
     }
 
@@ -158,8 +209,13 @@ function checkSubStructure( rootDesc ) {
         }
 
         // finally, move curNode to the nextSibling
+    //    curNode = curNode.nextElementSibling;
+    }
+
+    if( match  ) {
         curNode = curNode.nextElementSibling;
     }
+
 }
 
 function markAsIncorrect(desc) {
@@ -175,7 +231,8 @@ function compareTag(desc, node) {
     let compares = false;
 
     // compare tagname
-    if( node.nodeName.toLowerCase() == desc.tag.toLowerCase() ) {
+    if( node.nodeName.toLowerCase() == desc.tag.toLowerCase() ||
+       (desc.alternative != undefined && node.nodeName.toLowerCase() == desc.alternative.toLowerCase() ) ) {
         compares = true;
 
         // for now, everything is okay - but test id and tag
